@@ -1,0 +1,74 @@
+<!-- Navigation -->
+<nav id="navbar" class="navbar navbar-expand-lg navbar-light shadow fixed-top bg-nav">
+    <div id="container-navbar" class="container">
+        <a class="navbar-brand text-white title-nav" href="{{ path('home') }}">
+            SnowTricks
+        </a>
+
+        <div class="container navbar-sm">
+            <a class="nav-link text-white accueil-responsive mr-5" href="{{ path('home') }}">
+                <i class="fas fa-home nav-btn-style"></i>
+            </a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+                <i class="fas fa-bars text-white"></i>
+            </button>
+            {% if app.user %}
+                <a href="{{ path('auth_logout') }}" class="nav-link text-white connexion-responsive ml-5">
+                    <i class="fas fa-sign-out-alt nav-btn-style"></i>
+                </a>
+            {% else %}
+                <a class="nav-link text-white connexion-responsive ml-5" href="{{ path('auth_login') }}">
+                    <i class="fas fa-sign-in-alt nav-btn-style"></i>
+                </a>
+            {% endif %}
+        </div>
+
+        <button class="navbar-toggler navbar-medium bg-light" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarResponsive">
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item active">
+                    <a class="nav-link text-white" href="{{ path('home') }}">
+                        <i class="fas fa-home mr-1"></i>
+                        Accueil
+                    </a>
+                </li>
+                {% if is_granted('ROLE_USER') %}
+                    <li class="nav-item">
+                        <a class="nav-link text-white" href="{{ path('trick_new') }}">
+                            <i class="fas fa-plus mr-1"></i>
+                            Créer un trick
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <div class="dropdown">
+                            <a href="" class="nav-link dropdown-toggle text-white" data-toggle="dropdown" id="accountDropdownLink">
+                                <img src="{{ asset('uploads/profile/') }}{{ app.user.picture }}" alt="Avatar de {{ app.user.name }}" class="avatar-mini mr-1">
+                                {{ app.user.name }}
+                            </a>
+                            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="accountDropdownLink">
+                                <a href="{{ path('account_index') }}" class="dropdown-item">Mon profil</a>
+                                <a href="{{ path('auth_logout') }}" class="dropdown-item">Déconnexion</a>
+                            </div>
+                        </div>
+                    </li>
+                {% else %}
+                    <li class="nav-item">
+                        <a class="nav-link text-white" href="{{ path('register_index') }}">
+                            <i class="fas fa-user-plus mr-1"></i>
+                            Inscription
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-white" href="{{ path('auth_login') }}">
+                            <i class="fas fa-sign-in-alt mr-1"></i>
+                            Connexion
+                        </a>
+                    </li>
+                {% endif %}
+            </ul>
+        </div>
+    </div>
+</nav>

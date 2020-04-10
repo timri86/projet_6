@@ -1,0 +1,11 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Créer un nouveau Trick{% endblock %}
+
+{% block body %}
+    <h1>Créer un nouveau Trick</h1>
+
+    {{ include('tricks/_form.html.twig') }}
+
+    <a href="{{ path('tricks_index') }}">Retourner à la liste</a>
+{% endblock %}

@@ -1,0 +1,76 @@
+{% extends 'base.html.twig' %}
+{% block stylesheets %}
+    {{ encore_entry_link_tags('app') }}
+
+<!-- Bootstrap core CSS -->
+<link href="/assets/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+
+<!-- Favicons -->
+<meta name="msapplication-config" content="/docs/4.4/assets/img/favicons/browserconfig.xml">
+<meta name="theme-color" content="#563d7c">
+
+
+<style>
+    .bd-placeholder-img {
+        font-size: 1.125rem;
+        text-anchor: middle;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+    }
+
+    @media (min-width: 768px) {
+        .bd-placeholder-img-lg {
+            font-size: 3.5rem;
+        }
+    }
+</style>
+
+
+{% endblock %}
+
+{% block body %}
+    <!-- header -->
+    <main role="main">
+
+        <section class="jumbotron text-center">
+            <div class="container">
+                <h1>Les Tricks</h1>
+                <p class="lead text-muted">Pour les métiers créatifs, les prémices sont simples. Soit tu imites et dans le meilleur des cas tu te rapproches des meilleurs, soit tu inventes et alors il se peut que tu ailles plus loin. Le snowboard est l’un de ces métiers créatifs, et même si le chemin est long pour arriver à pro, les shreddeurs de métier n’ont pas tous leur propre style et de loin.
+                    Alors voilà, pour t’inspirer, une poignée de snowboardeurs chez qui le style, ou bien la signature, est manifeste et dont on se rappelle encore la carrière active. Pas pour le résultat d’une compétition mais pour un trick, un bone ou un tweak. C’est parti!</p>
+                <p>
+                    <a href="{{ path('tricks_new') }}" class="btn btn-primary my-2">Créer un trick</a>
+                    <a href="#card" class="btn btn-secondary my-2">Voir les tricks</a>
+                </p>
+            </div>
+        </section>
+
+    <!-- cards -->
+        <div id="card" class="container-fluid">
+            <div class="container">
+                <div class="row">
+                    {% for trick in tricks %}
+                    <div class="col-md-4">
+                        <div class="card mb-4 shadow-sm">
+                            <svg class="bd-placeholder-img card-img-top" width="100%" height="225" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice" focusable="false" role="img" aria-label="Placeholder: Thumbnail"><title>Placeholder</title><rect width="100%" height="100%" fill="#55595c"/><text x="50%" y="50%" fill="#eceeef" dy=".3em">{{ trick.name }}</text></svg>
+                            <div class="card-body">
+                                <p class="card-text">{{ trick.Description }}</p>
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div class="btn-group">
+                                        <a href="{{ path('tricks_show', {'id': trick.id}) }}" class="btn btn-sm btn-outline-secondary">Voir</a>
+                                        <a href="{{ path('tricks_edit', {'id': trick.id}) }}" class="btn btn-sm btn-outline-secondary">Modifier</a>
+                                    </div>
+                                    <small class="text-muted">{{ trick.Date ? trick.Date|date('Y-m-d') : '' }}</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+{% endblock %}

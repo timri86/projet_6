@@ -3,9 +3,11 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\ImageRepository")
+ * @UniqueEntity("image")
  */
 class Image
 {
@@ -31,12 +33,12 @@ class Image
         return $this->id;
     }
 
-    public function getSource(): ?string
+    public function getSource()
     {
         return $this->source;
     }
 
-    public function setSource(string $source): self
+    public function setSource($source): self
     {
         $this->source = $source;
 

@@ -51,9 +51,19 @@
             <div class="container">
                 <div class="row">
                     {% for trick in tricks %}
+                        {% set defaultimage="" %}
+                        {% set defaultsource="" %}
+                        {% for img in trick.image|slice(0,1) %}
+                            {% set defaultimage=img.source %}
+                        {% endfor %}
+                        {% for img in trick.image|slice(0,1) %}
+                            {% set defaultsource=img.alternatif %}
+                        {% endfor %}
                     <div class="col-md-4">
                         <div class="card mb-4 shadow-sm">
-                            <svg class="bd-placeholder-img card-img-top" width="100%" height="225" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice" focusable="false" role="img" aria-label="Placeholder: Thumbnail"><title>Placeholder</title><rect width="100%" height="100%" fill="#55595c"/><text x="50%" y="50%" fill="#eceeef" dy=".3em">{{ trick.name }}</text></svg>
+                            <div>
+                                <img style="height: 150px; width: 100%" src="{{ asset('images/'~defaultimage )}}" alt="{{ defaultsource }}">
+                            </div>
                             <div class="card-body">
                                 <p class="card-text">{{ trick.Description }}</p>
                                 <div class="d-flex justify-content-between align-items-center">

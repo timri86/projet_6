@@ -5,9 +5,11 @@ namespace App\Entity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\TricksRepository")
+ * @UniqueEntity("name")
  */
 class Tricks
 {
@@ -18,10 +20,7 @@ class Tricks
      */
     private $id;
 
-    /**
-     * @ORM\Column(type="string", length=255)
-     */
-    private $name;
+
 
     /**
      * @ORM\Column(type="string", length=255)
@@ -45,14 +44,20 @@ class Tricks
     private $video;
 
     /**
-     * @ORM\ManyToMany(targetEntity="App\Entity\Image")
+     * @ORM\ManyToMany(targetEntity="App\Entity\Image", cascade={"persist"})
      */
     private $image;
+
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $name;
 
     public function __construct()
     {
         $this->video = new ArrayCollection();
         $this->image = new ArrayCollection();
+        $this->Date=new \DateTime();
     }
 
     public function getId(): ?int
@@ -60,17 +65,7 @@ class Tricks
         return $this->id;
     }
 
-    public function getName(): ?string
-    {
-        return $this->name;
-    }
 
-    public function setName(string $name): self
-    {
-        $this->name = $name;
-
-        return $this;
-    }
 
     public function getDescription(): ?string
     {
@@ -156,6 +151,18 @@ class Tricks
         if ($this->image->contains($image)) {
             $this->image->removeElement($image);
         }
+
+        return $this;
+    }
+
+    public function getName(): ?string
+    {
+        return $this->name;
+    }
+
+    public function setName(string $name): self
+    {
+        $this->name = $name;
 
         return $this;
     }

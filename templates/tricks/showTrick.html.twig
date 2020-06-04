@@ -1,0 +1,29 @@
+<div class="card mb-3">
+    <h3 class="card-header text-center">{{ trick.name }}</h3>
+    <div class="card-body">
+        <h5 class="card-title text-center">Type "{{ trick.groupe }}"</h5>
+        <h6 class="card-subtitle text-muted">{{ trick.groupe.description }}</h6>
+    </div>
+    {% set defaultimage="" %}
+    {% set defaultsource="" %}
+    {% for img in trick.image|slice(0,1) %}
+        {% set defaultimage=img.source %}
+    {% endfor %}
+    {% for img in trick.image|slice(0,1) %}
+        {% set defaultsource=img.alternatif %}
+    {% endfor %}
+    <img style="height: 600px; width: 100%; display: block;" src="{{ asset('images/'~defaultimage )}}" alt="{{ defaultsource }}">
+
+    <div class="card-body">
+        <p class="card-text h-100">{{ trick.description }}</p>
+    </div>
+    {% if is_granted('IS_AUTHENTICATED_FULLY') %}
+    <div class="btn-group" role="group" aria-label="Basic example">
+        {{ include('tricks/_delete_form.html.twig') }}
+    </div>
+    {% endif %}
+    <div class="card-footer text-muted">
+        <strong>Par</strong> : {{ trick.user.pseudo }} | <strong>Le</strong> : {{ trick.Date ? trick.Date|date('d-m-Y') : '' }} | <a href="#comments-block">{{ trick.comments | length }} <strong>Commentaires</strong></a>
+    </div>
+</div>
+

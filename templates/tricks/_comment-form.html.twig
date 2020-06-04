@@ -1,0 +1,9 @@
+{{ form_start(form) }}
+<div class="form-group" id="comments-block">
+    {{ form_widget(form.content, {'attr': {'class': 'form-control'}}) }}
+</div>
+<div class="form-group">
+    <button type="submit" class="btn btn-success ml-2">Commenter</button>
+</div>
+{{ form_end(form) }}
+

@@ -1,0 +1,10 @@
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+<div class="card">
+    <div class="card-body">
+        {% if comment.user.avatar is not null %}
+        <img style="float: left" height="32" WIDTH="32" src="{{ asset('images/'~comment.user.avatar.source) }}" class="avatar avatar-medium" alt="avatar">
+        {% endif %}
+        <h4 class="card-title">{{ comment.user.pseudo }}</h4>
+        <p class="card-text">{{ comment.content }}</p>
+    </div>
+</div>

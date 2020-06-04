@@ -23,11 +23,6 @@ class Tricks
 
 
     /**
-     * @ORM\Column(type="string", length=255)
-     */
-    private $Description;
-
-    /**
      * @ORM\Column(type="date")
      */
     private $Date;
@@ -44,6 +39,7 @@ class Tricks
     private $video;
 
     /**
+     *
      * @ORM\ManyToMany(targetEntity="App\Entity\Image", cascade={"persist"})
      */
     private $image;
@@ -53,11 +49,29 @@ class Tricks
      */
     private $name;
 
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="tricks")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $user;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Comment", mappedBy="trick", orphanRemoval=true)
+     */
+    private $comments;
+
+    /**
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $description;
+
     public function __construct()
     {
         $this->video = new ArrayCollection();
         $this->image = new ArrayCollection();
         $this->Date=new \DateTime();
+        $this->comment = new ArrayCollection();
+        $this->comments = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -67,17 +81,6 @@ class Tricks
 
 
 
-    public function getDescription(): ?string
-    {
-        return $this->Description;
-    }
-
-    public function setDescription(string $Description): self
-    {
-        $this->Description = $Description;
-
-        return $this;
-    }
 
     public function getDate(): ?\DateTimeInterface
     {
@@ -166,5 +169,84 @@ class Tricks
 
         return $this;
     }
-    
+
+
+    /**
+     * @return string
+     */
+    public function getThumbnail(): string
+    {
+        $path = '/public/images/thumbnail.jpg';
+
+        if(!$this->image->isEmpty()) {
+            $image = $this->image->first();
+            $path = $image->getPath();
+        }
+
+        return $path;
+    }
+
+    /**
+     * toString
+     * @return string
+     */
+    public function __toString()
+    {
+        return $this->getName();
+    }
+
+    public function getUser(): ?User
+    {
+        return $this->user;
+    }
+
+    public function setUser(?User $user): self
+    {
+        $this->user = $user;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Comment[]
+     */
+    public function getComments(): Collection
+    {
+        return $this->comments;
+    }
+
+    public function addComment(Comment $comment): self
+    {
+        if (!$this->comments->contains($comment)) {
+            $this->comments[] = $comment;
+            $comment->setTrick($this);
+        }
+
+        return $this;
+    }
+
+    public function removeComment(Comment $comment): self
+    {
+        if ($this->comments->contains($comment)) {
+            $this->comments->removeElement($comment);
+            // set the owning side to null (unless already changed)
+            if ($comment->getTrick() === $this) {
+                $comment->setTrick(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function getDescription(): ?string
+    {
+        return $this->description;
+    }
+
+    public function setDescription(?string $description): self
+    {
+        $this->description = $description;
+
+        return $this;
+    }
 }

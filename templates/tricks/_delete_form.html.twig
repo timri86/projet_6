@@ -1,5 +1,5 @@
-<form method="post" action="{{ path('tricks_delete', {'id': trick.id}) }}" onsubmit="return confirm('Are you sure you want to delete this item?');">
+<form class="w-50" method="post" action="{{ path('tricks_delete', {'id': trick.id}) }}" onsubmit="return confirm('Supprimer le Trick ?');">
     <input type="hidden" name="_method" value="DELETE">
     <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ trick.id) }}">
-    <button class="btn">Supprimer</button>
+    <input type="image" src="https://cdn1.iconfinder.com/data/icons/device-apps-settings/2048/Recycle_bin-512.png" style="-webkit-user-select: none; height: 50px; width: 50px; margin-right: 200px">
 </form>

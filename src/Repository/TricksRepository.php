@@ -19,32 +19,21 @@ class TricksRepository extends ServiceEntityRepository
         parent::__construct($registry, Tricks::class);
     }
 
-    // /**
-    //  * @return Tricks[] Returns an array of Tricks objects
-    //  */
-    /*
-    public function findByExampleField($value)
-    {
-        return $this->createQueryBuilder('t')
-            ->andWhere('t.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('t.id', 'ASC')
-            ->setMaxResults(10)
-            ->getQuery()
-            ->getResult()
-        ;
-    }
-    */
+    public  function showOneTrick($id){
 
-    /*
-    public function findOneBySomeField($value): ?Tricks
-    {
-        return $this->createQueryBuilder('t')
-            ->andWhere('t.exampleField = :val')
-            ->setParameter('val', $value)
-            ->getQuery()
-            ->getOneOrNullResult()
-        ;
+        $qb=$this->createQueryBuilder('t')
+            ->where('t.id=:id')
+            ->setParameter('id',$id)
+            ->leftJoin('t.image','i')
+            ->addSelect('i')
+            ->leftJoin('t.video','v')
+            ->addSelect('v')
+            ->leftJoin('t.user', 'u')
+            ->addSelect('u')
+            ->leftJoin('t.comments', 'c')
+            ->addSelect('c')
+            ->getQuery();
+
+        return $qb->getResult();
     }
-    */
 }

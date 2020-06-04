@@ -11,6 +11,13 @@
 
 
 <style>
+    .trick{
+        display: none;
+    }
+
+    .jumbotron{
+        background-image: url("https://www.fond-ecran-hd.net/Public/uploads/2019-01-14/491.jpg");
+    }
     .bd-placeholder-img {
         font-size: 1.125rem;
         text-anchor: middle;
@@ -37,19 +44,23 @@
         <section class="jumbotron text-center">
             <div class="container">
                 <h1>Les Tricks</h1>
-                <p class="lead text-muted">Pour les métiers créatifs, les prémices sont simples. Soit tu imites et dans le meilleur des cas tu te rapproches des meilleurs, soit tu inventes et alors il se peut que tu ailles plus loin. Le snowboard est l’un de ces métiers créatifs, et même si le chemin est long pour arriver à pro, les shreddeurs de métier n’ont pas tous leur propre style et de loin.
+                <p class="lead text-white">Pour les métiers créatifs, les prémices sont simples. Soit tu imites et dans le meilleur des cas tu te rapproches des meilleurs, soit tu inventes et alors il se peut que tu ailles plus loin. Le snowboard est l’un de ces métiers créatifs, et même si le chemin est long pour arriver à pro, les shreddeurs de métier n’ont pas tous leur propre style et de loin.
                     Alors voilà, pour t’inspirer, une poignée de snowboardeurs chez qui le style, ou bien la signature, est manifeste et dont on se rappelle encore la carrière active. Pas pour le résultat d’une compétition mais pour un trick, un bone ou un tweak. C’est parti!</p>
                 <p>
                     <a href="{{ path('tricks_new') }}" class="btn btn-primary my-2">Créer un trick</a>
-                    <a href="#card" class="btn btn-secondary my-2">Voir les tricks</a>
+                    <a href="#tricks" class="btn btn-secondary my-2">Voir les tricks</a>
                 </p>
             </div>
         </section>
 
     <!-- cards -->
-        <div id="card" class="container-fluid">
+        <div id="tricks" class="container-fluid">
             <div class="container">
                 <div class="row">
+
+                    <!-- Déclaration d'une valeur numérique pour la boucle trick -->
+
+                    {% set nb = 1 %}
                     {% for trick in tricks %}
                         {% set defaultimage="" %}
                         {% set defaultsource="" %}
@@ -59,28 +70,65 @@
                         {% for img in trick.image|slice(0,1) %}
                             {% set defaultsource=img.alternatif %}
                         {% endfor %}
-                    <div class="col-md-4">
+
+                        <!-- Ajout de la classe d-block quand nb est inférieur ou égal à 6 et ajout de la valeur de nb dans l'id -->
+
+                        <div class="col-md-4 trick {{ nb <= 6 ? 'd-block' : ''}}" id="card_{{ nb }}">
                         <div class="card mb-4 shadow-sm">
                             <div>
                                 <img style="height: 150px; width: 100%" src="{{ asset('images/'~defaultimage )}}" alt="{{ defaultsource }}">
                             </div>
                             <div class="card-body">
-                                <p class="card-text">{{ trick.Description }}</p>
-                                <div class="d-flex justify-content-between align-items-center">
+                                <p class="card-text">{{ trick.description }}</p>
+                                <div class="d-flex justify-content-between align-items-center ">
+                                    {% if not is_granted('IS_AUTHENTICATED_FULLY') %}
                                     <div class="btn-group">
-                                        <a href="{{ path('tricks_show', {'id': trick.id}) }}" class="btn btn-sm btn-outline-secondary">Voir</a>
-                                        <a href="{{ path('tricks_edit', {'id': trick.id}) }}" class="btn btn-sm btn-outline-secondary">Modifier</a>
+                                        <a href="{{ path('tricks_show', {'id': trick.id}) }}"><img style="-webkit-user-select: none; height: 50px; width: 50px; display: block" src="https://cdn0.iconfinder.com/data/icons/ui-icons-pack/100/ui-icon-pack-14-512.png"></a>
                                     </div>
-                                    <small class="text-muted">{{ trick.Date ? trick.Date|date('Y-m-d') : '' }}</small>
+                                    {% endif %}
+                                    {% if is_granted('IS_AUTHENTICATED_FULLY') %}
+                                        <a href="{{ path('tricks_show', {'id': trick.id}) }}"><img style="-webkit-user-select: none; height: 50px; width: 50px; display: block" src="https://cdn0.iconfinder.com/data/icons/ui-icons-pack/100/ui-icon-pack-14-512.png"></a>
+                                        <a href="{{ path('tricks_edit', {'id': trick.id}) }}"><img style="-webkit-user-select: none; height: 50px; width: 50px; display: block" src="https://cdn.pixabay.com/photo/2012/04/12/12/07/pen-29727_960_720.png"></a>
+                                        {{ include('tricks/_delete_form.html.twig') }}
+                                    {% endif %}
+                                    <small style="float: right" class="text-muted">{{ trick.Date ? trick.Date|date('Y-m-d') : '' }}</small>
                                 </div>
                             </div>
                         </div>
                     </div>
+                        <!-- Augmentation de la valeur de nb à chaque fin de boucle (nb + 1) -->
+                        {% set nb = nb+1 %}
                     {% endfor %}
                 </div>
             </div>
+        </div>
 
+        <div class="container">
+        <div class="row justify-content-center m-3">
+            <a id="loadMoreTrick"><i class="fas fa-plus-circle fa-3x"></i></a>
+        </div>
         </div>
     </main>
+
+        <script>
+
+            document.addEventListener("DOMContentLoaded", () => {
+                $("#loadMoreTrick").on("click", () => {
+                    let visible_card = $(".col-md-4.d-block");
+                    let last_card_visible = $(visible_card[visible_card.length - 1]).attr("id");
+                    let tmp = last_card_visible.split("_")[1];
+                    for (let i = tmp++; i < tmp + 6; i++) {
+
+                        let current_card = $("#card_" + i);
+                        current_card.fadeIn("slow");
+
+                    }
+                })
+            })
+
+        </script>
+
+{% endblock %}
+{% block javascripts %}
 
 {% endblock %}

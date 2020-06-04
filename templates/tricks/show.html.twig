@@ -1,30 +1,56 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Tricks{% endblock %}
+{% block title %}{% for trick in trick %}SnowTricks -{{ trick.name }}{% endfor %} {% endblock %}
 
 {% block body %}
-    <h1>Tricks</h1>
+    {% for trick in trick %}
 
-    <table class="table">
-        <tbody>
-            <tr>
-                <th>Nom</th>
-                <td>{{ trick.name }}</td>
-            </tr>
-            <tr>
-                <th>Description</th>
-                <td>{{ trick.Description }}</td>
-            </tr>
-            <tr>
-                <th>Date</th>
-                <td>{{ trick.Date ? trick.Date|date('Y-m-d') : '' }}</td>
-            </tr>
-        </tbody>
-    </table>
+<div class="container">
+    <main>
 
-    <a href="{{ path('tricks_index') }}">Retourner à la liste</a>
+        <!-- Start Trick -->
 
-    <a href="{{ path('tricks_edit', {'id': trick.id}) }}">Modifier</a>
+        <section>
+            {% include'tricks/showTrick.html.twig' %}
+        </section>
 
-    {{ include('tricks/_delete_form.html.twig') }}
+
+
+        <!-- Start Carousel -->
+
+        <section class="row">
+                {% include'tricks/carousel.html.twig' %}
+        </section>
+
+        <!-- End Carousel -->
+
+        <!-- End Trick -->
+
+
+
+
+        <!-- Start Comment Add Form -->
+
+        <div class="container">
+            <div class="card mb-3">
+            <h4 class="card-header text-center">Commentaires</h4>
+            {% if app.user %}
+                {% include'tricks/_comment-form.html.twig' %}
+            {% endif %}
+
+            <!-- End Comment Add Form -->
+
+            <!-- Start Comments -->
+
+            {% for comment in trick.comments %}
+            {% include'tricks/_comments.html.twig' %}
+            {% endfor %}
+
+        </div>
+
+        <!-- End Comments -->
+        </div>
+    </main>
+</div>
+    {% endfor %}
 {% endblock %}

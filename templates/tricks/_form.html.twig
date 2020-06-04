@@ -1,9 +1,77 @@
+{% block stylesheets %}
+    <style>
+        #simpleform {
+            width:600px;
+            border:2px solid grey;
+            padding:14px;
+        }
+        #simpleform label {
+            font-size:18px;
+            float:left;
+            width:300px;
+            text-align:right;
+            display:block;
+        }
+        #simpleform span {
+            font-size:11px;
+            color:grey;
+            width:100px;
+            text-align:right;
+            display:block;
+        }
+
+
+        #simpleform button {
+            clear:both;
+            margin-left:250px;
+            color:blue;
+            border:solid 1px #666666;
+            font-size:16px;
+        }
+    </style>
+{% endblock %}
+
+<div class="col-lg-7 col-md-10 mx-auto">
 {{ form_start(form) }}
-    {{ form_widget(form) }}
-      {{ form_row(form.video) }}
-    <a href="#" id="add_video" class="btn btn-default">Ajouter une vidéo</a>
-    <a href="#" id="add_image" class="btn btn-default">Ajouter une image</a>
-    <button class="btn">{{ button_label|default('Enregistrer') }}</button>
+
+    <div class="form-group">
+        <label for="name">Nom du Trick</label>
+        {{ form_widget(form.name, {'attr':{'class':'form-control'}}) }}
+    </div>
+    <div class="form-group">
+        <label for="name">Description</label>
+        {{ form_widget(form.description, {'attr':{'class':'form-control'}}) }}
+    </div>
+    <div class="form-group">
+        <label for="name">Groupe</label>
+        {{ form_widget(form.groupe, {'attr':{'class':'form-control'}}) }}
+    </div>
+    <div class="form-row">
+        <div id="simpleform" class="form-group col-6 card-header p-2">
+            {{ form_widget(form.video) }}
+            <a href="#" id="add_video" class="btn btn-success float-right">Ajouter une vidéo</a>
+        </div>
+        <div id="simpleform" class="form-group col-6 card-header p-2">
+            {{ form_widget(form.image, {'label_attr': {'class':'mb-4'}}) }}
+            <a href="#" id="add_image" class="btn btn-success float-right">Ajouter une image</a>
+        </div>
+    </div>
+
+
+
+    {% if(trick.image) %}
+        {% set i=1 %}
+        {% for image in trick.image %}
+            <input type="hidden" value="{{ image.source }}" name="{{ i }}">
+            {% set i=i+1 %}
+        {% endfor %}
+    {% endif %}
+        <div class="form-group">
+            <button class="btn btn-warning mt-2">{{ button_label|default('Enregistrer') }}</button>
+        </div>
+
+    </div>
+</div>
 <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
 
 {# Voici le script en question : #}
@@ -40,7 +108,7 @@
             // - le texte "__name__" qu'il contient par le numéro du champ
             console.log($container.attr('data-prototype'));
             var template = $container.attr('data-prototype')
-                .replace(/__name__label__/g, 'video n°' + (index+1))
+                .replace(/__name__label__/g, 'Video n°' + (index+1))
                 .replace(/__name__/g,        index)
             ;
 
@@ -60,7 +128,7 @@
         // La fonction qui ajoute un lien de suppression d'une catégorie
         function addDeleteLink($prototype) {
             // Création du lien
-            var $deleteLink = $('<a href="#" class="btn btn-danger">Supprimer</a>');
+            var $deleteLink = $('<a href="#" style="padding-top: 2px" class="btn btn-danger">Supprimer</a>');
 
             // Ajout du lien
             $prototype.append($deleteLink);
@@ -109,7 +177,7 @@
             // - le texte "__name__" qu'il contient par le numéro du champ
             console.log($container.attr('data-prototype'));
             var template = $container.attr('data-prototype')
-                .replace(/__name__label__/g, 'Image' + (index+1))
+                .replace(/__name__label__/g, 'Image n°' + (index+1))
                 .replace(/__name__/g,        index)
             ;
 
@@ -129,7 +197,7 @@
         // La fonction qui ajoute un lien de suppression d'une catégorie
         function addDeleteLink($prototype) {
             // Création du lien
-            var $deleteLink = $('<a href="#" class="btn btn-danger">Supprimer</a>');
+            var $deleteLink = $('<a href="#" class="btn btn-danger mt-2">Supprimer</a>');
 
             // Ajout du lien
             $prototype.append($deleteLink);

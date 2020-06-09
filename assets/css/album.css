@@ -23,9 +23,57 @@
     max-width: 40rem;
 }
 
+.like, .dislike {
+    display: inline-block;
+    margin-bottom: 0;
+    font-weight: normal;
+    text-align: center;
+    vertical-align: middle;
+    cursor: pointer;
+    background: lightgreen;
+    border: 1px solid transparent;
+    white-space: nowrap;
+    padding: 6px 12px;
+    font-size: 14px;
+    line-height: 1.428571429;
+    border-radius: 4px;
+}
+.qty1, .qty2 {
+    border: none;
+    width:20px;
+    background: transparent;
+}
+
+button.like{
+    width: 30px;
+    height: 30px;
+    margin: 0 auto;
+    line-heigth: 50px;
+    border-radius: 50%;
+    color: rgba(0,150,136 ,1);
+    background-color:rgba(38,166,154 ,0.3);
+    border-color: rgba(0,150,136 ,1);
+    border-width: 1px;
+    font-size: 15px;
+}
+
+button.dislike{
+    width: 30px;
+    height: 30px;
+    margin: 0 auto;
+    line-heigth: 50px;
+    border-radius: 50%;
+    color: rgba(255,82,82 ,1);
+    background-color: rgba(255,138,128 ,0.3);
+    border-color: rgba(255,82,82 ,1);
+    border-width: 1px;
+    font-size: 15px;
+}
+
 footer {
-    padding-top: 3rem;
-    padding-bottom: 3rem;
+    position: absolute;
+    bottom: 0;
+    width: 100%;
 }
 
 footer p {

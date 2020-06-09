@@ -32,7 +32,7 @@
 {% endblock %}
 
 <div class="col-lg-7 col-md-10 mx-auto">
-{{ form_start(form) }}
+{{ form_start(form, {'attr':{'id':'trigger'}}) }}
 
     <div class="form-group">
         <label for="name">Nom du Trick</label>
@@ -46,14 +46,37 @@
         <label for="name">Groupe</label>
         {{ form_widget(form.groupe, {'attr':{'class':'form-control'}}) }}
     </div>
+    <div class="form-group">
+        <div id="carouselExampleControls" class="carousel slide" data-ride="carousel">
+            <div class="carousel-inner">
+
+                {% for i, image in trick.image %}
+                    <div class="carousel-item {% if i==0 %}active{% endif %}">
+                        <img style="padding-bottom: 20px" class="d-block w-100" src="{{ asset('images/'~image) }}" alt="First slide">
+                        <a href="#" id="add_image" class="btn btn-danger">Supprimer cette image</a>
+                    </div>
+                {% endfor %}
+
+            </div>
+            <a class="carousel-control-prev" href="#carouselExampleControls" role="button" data-slide="prev">
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                <span class="sr-only">Previous</span>
+            </a>
+            <a class="carousel-control-next" href="#carouselExampleControls" role="button" data-slide="next">
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                <span class="sr-only">Next</span>
+            </a>
+        </div>
+    </div>
     <div class="form-row">
         <div id="simpleform" class="form-group col-6 card-header p-2">
             {{ form_widget(form.video) }}
             <a href="#" id="add_video" class="btn btn-success float-right">Ajouter une vidéo</a>
         </div>
         <div id="simpleform" class="form-group col-6 card-header p-2">
-            {{ form_widget(form.image, {'label_attr': {'class':'mb-4'}}) }}
+            {{ form_widget(form.image) }}
             <a href="#" id="add_image" class="btn btn-success float-right">Ajouter une image</a>
+            <div class="preview-0"></div>
         </div>
     </div>
 
@@ -76,6 +99,46 @@
 
 {# Voici le script en question : #}
 <script type="text/javascript">
+    // Preview de mes images à l'upload.
+
+    function createThumbnail(sFile,sId) {
+        var oReader = new FileReader();
+        oReader.addEventListener('load', function() {
+            var oImgElement = document.createElement('img');
+            oImgElement.setAttribute('width', 200);
+            oImgElement.setAttribute('height', 200);
+            oImgElement.src = this.result;
+            console.log(sId);
+            document.getElementById('preview-'+sId).appendChild(oImgElement);
+        }, false);
+
+        oReader.readAsDataURL(sFile);
+
+    }
+    function changeInputFil(oEvent){
+        var oInputFile = oEvent.currentTarget,
+            sName = oInputFile.name,
+            aFiles = oInputFile.files,
+            aAllowedTypes = ['png', 'jpg', 'jpeg', 'gif'],
+            imgType;
+        /* Faire que si le format n'est pas accepter, faire un truc */
+        document.getElementById('preview-'+sName).innerHTML ='';
+        for (var i = 0 ; i < aFiles.length ; i++) {
+            imgType = aFiles[i].name.split('.');
+            imgType = imgType[imgType.length - 1];
+            if(aAllowedTypes.indexOf(imgType) !== -1) {
+                createThumbnail(aFiles[i],sName);
+            }
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded',function(){
+        var aFileInput = document.forms['trigger'].querySelectorAll('[type=file]');
+        for(var k = 0; k < aFileInput.length;k++){
+            aFileInput[k].addEventListener('change', changeInputFil, false);
+        }
+    });
+
     $(document).ready(function() {
         // On récupère la balise <div> en question qui contient l'attribut « data-prototype » qui nous intéresse.
         var $container = $('div#tricks_video');
@@ -106,7 +169,7 @@
             // Dans le contenu de l'attribut « data-prototype », on remplace :
             // - le texte "__name__label__" qu'il contient par le label du champ
             // - le texte "__name__" qu'il contient par le numéro du champ
-            console.log($container.attr('data-prototype'));
+            //console.log($container.attr('data-prototype'));
             var template = $container.attr('data-prototype')
                 .replace(/__name__label__/g, 'Video n°' + (index+1))
                 .replace(/__name__/g,        index)
@@ -175,11 +238,12 @@
             // Dans le contenu de l'attribut « data-prototype », on remplace :
             // - le texte "__name__label__" qu'il contient par le label du champ
             // - le texte "__name__" qu'il contient par le numéro du champ
-            console.log($container.attr('data-prototype'));
+            //console.log($container.attr('data-prototype'));
             var template = $container.attr('data-prototype')
                 .replace(/__name__label__/g, 'Image n°' + (index+1))
                 .replace(/__name__/g,        index)
             ;
+
 
             // On crée un objet jquery qui contient ce template
             var $prototype = $(template);

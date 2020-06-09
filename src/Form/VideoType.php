@@ -4,6 +4,7 @@ namespace App\Form;
 
 use App\Entity\Video;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -12,7 +13,13 @@ class VideoType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('source')
+            ->add('source', TextType::class, [
+                'attr' => array(
+                    'class' => 'form-control mb-2',
+                    'placeholder' => 'URL youtube de la vidéo'
+                ),
+                'label' =>false
+            ] )
         ;
     }
 

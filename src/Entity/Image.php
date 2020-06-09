@@ -56,4 +56,24 @@ class Image
 
         return $this;
     }
+    public function __toString()
+    {
+        return $this->getSource();
+    }
+
+    /**
+     * @return string
+     */
+    public function getUploadRootDir(): string
+    {
+        return __DIR__.'/../../public/images/'.$this->getUploadRootDir();
+    }
+
+    /**
+     * @return string
+     */
+    public function getPath(): ?string
+    {
+        return $this->getUploadRootDir().'/'.$this->getSource().'.'.$this->getAlternatif();
+    }
 }

@@ -12,6 +12,7 @@ use App\Repository\CommentRepository;
 use App\Repository\ImageRepository;
 use App\Repository\TricksRepository;
 use App\Repository\VideoRepository;
+use App\Services\ImageUploadService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
@@ -40,7 +41,7 @@ class TricksController extends AbstractController
     /**
      * @Route("/member/tricks/new", name="tricks_new", methods={"GET","POST"})
      */
-    public function new(Request $request): Response
+    public function new(Request $request, ImageUploadService $imageUploadService): Response
     {
         $user=$this->getuser();
         $trick = new Tricks();
@@ -48,35 +49,16 @@ class TricksController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $i=0;
             $entityManager = $this->getDoctrine()->getManager();
 
-            foreach ($trick->getImage() as $image)
-            {
-                $file=$image->getSource();
-                $filename=$trick->getName();
-                $filename= str_replace(' ', '', $filename);
-                $unwanted_array = array(    'Š'=>'S', 'š'=>'s', 'Ž'=>'Z', 'ž'=>'z', 'À'=>'A', 'Á'=>'A', 'Â'=>'A', 'Ã'=>'A', 'Ä'=>'A', 'Å'=>'A', 'Æ'=>'A', 'Ç'=>'C', 'È'=>'E', 'É'=>'E',
-                    'Ê'=>'E', 'Ë'=>'E', 'Ì'=>'I', 'Í'=>'I', 'Î'=>'I', 'Ï'=>'I', 'Ñ'=>'N', 'Ò'=>'O', 'Ó'=>'O', 'Ô'=>'O', 'Õ'=>'O', 'Ö'=>'O', 'Ø'=>'O', 'Ù'=>'U',
-                    'Ú'=>'U', 'Û'=>'U', 'Ü'=>'U', 'Ý'=>'Y', 'Þ'=>'B', 'ß'=>'Ss', 'à'=>'a', 'á'=>'a', 'â'=>'a', 'ã'=>'a', 'ä'=>'a', 'å'=>'a', 'æ'=>'a', 'ç'=>'c',
-                    'è'=>'e', 'é'=>'e', 'ê'=>'e', 'ë'=>'e', 'ì'=>'i', 'í'=>'i', 'î'=>'i', 'ï'=>'i', 'ð'=>'o', 'ñ'=>'n', 'ò'=>'o', 'ó'=>'o', 'ô'=>'o', 'õ'=>'o',
-                    'ö'=>'o', 'ø'=>'o', 'ù'=>'u', 'ú'=>'u', 'û'=>'u', 'ý'=>'y', 'þ'=>'b', 'ÿ'=>'y' );
-                $filename = strtr( $filename, $unwanted_array );
-                $filename=$filename."_".md5(uniqid()).".".$file->guessExtension();
-                if($file){
-                    try {
-                        $file->move(
-                            $this->getParameter('images_directory'),
-                            $filename
-                        );
-                    } catch (FileException $e) {
-                        // ... handle exception if something happens during file upload
-                    }
 
-                }
+
+            foreach ($trick->getImage() as $image)
+                $filename=$trick->getName();
+            {
+                $imageUploadService->upload($trick, $image);
                 $image->setSource($filename);
                 $image->setAlternatif($trick->getName());
-
 
             }
             foreach ($trick->getVideo() as $video)
